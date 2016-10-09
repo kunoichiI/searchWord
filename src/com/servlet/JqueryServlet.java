@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,14 +38,11 @@ public class JqueryServlet extends HttpServlet {
 		int res = 0;
         if (word.equals("")) {
                 word = "Word cannot be empty";
-        } else {
-                word = "This is : " + word;
-        			//System.out.print(word);
-        			
-        			res = searchInFile(word);
-        }
+        } 
+        res = searchInFile(word);
+		//System.out.print(res);
         response.setContentType("text/plain");
-        response.getWriter().write(word);
+        response.getWriter().write(String.valueOf(res));
 	}
 
 	/**
@@ -62,7 +60,7 @@ public class JqueryServlet extends HttpServlet {
 		
 		File[] listOfFiles = folder.listFiles();
 		
-		System.out.print(listOfFiles.length);
+		//System.out.print(listOfFiles.length);
 		if (listOfFiles.length > 0) {
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
@@ -70,8 +68,11 @@ public class JqueryServlet extends HttpServlet {
 					String thisLine = null;
 					while((thisLine = a.readLine()) != null) {
 						String words = thisLine;
-						if (words.equals(word)) {
-							count++;
+						String[] listOfWords = words.split(" ");
+						for (String str : listOfWords) {
+							if (str.equals(word)) {
+								count++;
+							}
 						}
 					}
 					a.close();
