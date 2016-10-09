@@ -1,8 +1,8 @@
 $(document).ready(function() {
-        $('#userName').blur(function(event) {
-                var name = $('#userName').val();
+        $('#word').blur(function(event) {
+                var word = $('#word').val();
                 $.get('JqueryServlet', {
-                        userName : name
+                        word : word
                 }, function(responseText) {
                         $('#ajaxResponse').text(responseText);
                 });
