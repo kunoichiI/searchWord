@@ -2,18 +2,17 @@ package com.servlet;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.DBoperation.DBConnManager;
 
 /**
  * Servlet implementation class JqueryServlet
@@ -41,6 +40,17 @@ public class JqueryServlet extends HttpServlet {
         } 
         res = searchInFile(word);
 		//System.out.print(res);
+        
+        try {
+			if (DBConnManager.getMySQLConnection() != null) {
+					System.out.print("Connect to DB!");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        
         response.setContentType("text/plain");
         response.getWriter().write(String.valueOf(res));
 	}
@@ -70,7 +80,8 @@ public class JqueryServlet extends HttpServlet {
 						String words = thisLine;
 						String[] listOfWords = words.split(" ");
 						for (String str : listOfWords) {
-							if (str.equals(word)) {
+							str = str.toLowerCase();
+							if (str.equals(word.toLowerCase())) {
 								count++;
 							}
 						}
