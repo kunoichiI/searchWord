@@ -8,11 +8,11 @@
 <form>
   <fieldset>
     <legend>AJAX implementation in JSP and Servlet using JQuery</legend>
-    <br /> Enter your Name: <input type="text" id="word" />
+    <br /> Enter your word here: <input type="text" id="word" />
  </fieldset>
 
  <fieldset>
-   <legend>Return the word, its frequency</legend>
+   <legend>Return the word, its frequency and how many times it has been called</legend>
    <div id="ajaxResponse"></div>
  </fieldset>
 </form>

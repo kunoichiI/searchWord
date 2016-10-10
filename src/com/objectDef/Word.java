@@ -30,6 +30,6 @@ public class Word {
 	}
 	
 	public String toString() {
-		return"Word [ " +"word: " + this.getWord() + ", " + "occurence: " + this.getOccurence() + ", " + "calledTimes: " + this.getCalledTimes() + " ]";
+		return"[" + "word:" + this.getWord() + ",  " + "occurence: " + this.getOccurence() + ",  " + "calledTimes: " + this.getCalledTimes() + "]";
 	}
 }

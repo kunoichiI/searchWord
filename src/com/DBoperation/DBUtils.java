@@ -1,34 +1,74 @@
 package com.DBoperation;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.objectDef.Word;
 
 public class DBUtils {
-	private Connection connection;
 	
 	public DBUtils() throws ClassNotFoundException, SQLException {
-		connection = DBConnManager.getMySQLConnection();
+		Connection connection = DBConnManager.getMySQLConnection();
 	}
 	
-	public Word getWord(String str) {
-		Word wordItem = new Word(str);
-		String query = "select occurence, calledTimes from searchWord where word =" + str;
-		
+	public static Word getWordbyName(Connection conn, Word wordItem) {
 		try {
-			Statement statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery(query);
-			while(rs.next()) {
-				wordItem.setOccurence(rs.getInt("occurence"));
-				wordItem.setCalledTimes(rs.getInt("calledTimes"));
+			if ((conn = DBConnManager.getMySQLConnection()) != null) {
+				//System.out.print("Connect to DB!");
+				String sql = "Select * from word where word = ?";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, wordItem.getWord());
+				ResultSet rs = stmt.executeQuery();
+				Boolean flag = rs.next();
+				if (!flag) {
+					wordItem = null;
+				}else {
+					wordItem.setOccurence(rs.getInt("occurence"));
+					//System.out.print(rs.getInt("occurence"));
+					wordItem.setCalledTimes(rs.getInt("calledTimes"));
+					//System.out.print(rs.getInt("calledTimes"));
+				
+				rs.close();
+				stmt.close();
+				stmt = null;
+			
+				conn.close();
+				conn = null;
+				}
 			}
-			System.out.println(wordItem.toString());
-		}catch (SQLException e) {
-			System.out.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		return wordItem;
+	}
+	
+	public static void insertWordItem(Connection conn, String word, int occurence, int calledTimes) {
+		try {
+			if ((conn = DBConnManager.getMySQLConnection()) != null) {
+				//System.out.print("Connect to DB!");
+				String sql = "insert into word(word, occurence, calledTimes) values(?,?,?)";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				// Paprameters start with 1
+				stmt.setString(1, word);
+				stmt.setInt(2, occurence);
+				stmt.setInt(3, calledTimes);
+				stmt.executeUpdate();
+			
+				stmt.close();
+				stmt = null;
+			
+				conn.close();
+				conn = null;
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}																																																																																																																																																																																																																																																																																																																																																																																																																																																															
 	}
 }

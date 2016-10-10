@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.DBoperation.DBConnManager;
+import com.DBoperation.DBUtils;
 import com.objectDef.Word;
 
 /**
@@ -39,54 +40,39 @@ public class JqueryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String word = request.getParameter("word");
 		int res = 0;
+		int calledTimes = 1;
         if (word.equals("")) {
                 word = "Word cannot be empty";
         } 
-        //res = searchInFile(word);
-		//System.out.print(res);
         
         // Connect to MySQL database "searchWord"
         Word wordItem = new Word(word);
         Connection conn = null;
-        PreparedStatement stmt = null;
-        String sql = null;
-        try {
-			if ((conn = DBConnManager.getMySQLConnection()) != null) {
-				//System.out.print("Connect to DB!");
-				//conn = DBConnManager.getMySQLConnection();
-				sql = "Select * from word where word = ?";
-				stmt = conn.prepareStatement(sql);
-				stmt.setString(1, word);
-				ResultSet rs = stmt.executeQuery();
-				
-				while(rs.next()) {
-					wordItem.setOccurence(rs.getInt("occurence"));
-					wordItem.setCalledTimes(rs.getInt("calledTimes"));
-				}
-				rs.close();
-				stmt.close();
-				stmt = null;
-				
-				conn.close();
-				conn = null;
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        
-        
+        Word tmp =  DBUtils.getWordbyName(conn, wordItem);
+        System.out.print(tmp.toString());
+		wordItem.setOccurence(tmp.getOccurence());
+		wordItem.setCalledTimes(tmp.getCalledTimes());
+		
+        System.out.print(wordItem.toString());
         response.setContentType("text/plain");
-        response.getWriter().write(wordItem.toString());
+        if (wordItem != null) {
+        		
+        		response.getWriter().write(wordItem.toString());
+        }
+        		//else {
+//        		res = searchInFile(word);
+//        		
+//        		System.out.print(res);
+//        		DBUtils.insertWordItem(conn, word, res, calledTimes);
+//        		response.getWriter().write(word + String.valueOf(res) + 1);
+//        }    
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
+		
 	}
 	
 	public int searchInFile(String word) throws IOException {
