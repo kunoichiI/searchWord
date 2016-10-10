@@ -5,12 +5,12 @@ public class Word {
 	private int occurence;
 	private int calledTimes;
 	
-	public Word() {
-		
+	public Word(String str) {
+		this.word = str;
 	}
 	
-	public void setWord(String s) {
-		this.word = s;
+	public String getWord() {
+		return this.word;
 	}
 	
 	public void setOccurence(int i) {
@@ -21,15 +21,15 @@ public class Word {
 		this.calledTimes = j;
 	}
 	
-	public String getWord() {
-		return this.word;
-	}
-	
 	public int getOccurence() {
 		return this.occurence;
 	}
 	
 	public int getCalledTimes() {
 		return this.calledTimes;
+	}
+	
+	public String toString() {
+		return"Word [ " +"word: " + this.getWord() + ", " + "occurence: " + this.getOccurence() + ", " + "calledTimes: " + this.getCalledTimes() + " ]";
 	}
 }

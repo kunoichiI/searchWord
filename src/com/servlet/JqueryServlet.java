@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.DBoperation.DBConnManager;
+import com.objectDef.Word;
 
 /**
  * Servlet implementation class JqueryServlet
@@ -38,12 +42,33 @@ public class JqueryServlet extends HttpServlet {
         if (word.equals("")) {
                 word = "Word cannot be empty";
         } 
-        res = searchInFile(word);
+        //res = searchInFile(word);
 		//System.out.print(res);
         
+        // Connect to MySQL database "searchWord"
+        Word wordItem = new Word(word);
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        String sql = null;
         try {
-			if (DBConnManager.getMySQLConnection() != null) {
-					System.out.print("Connect to DB!");
+			if ((conn = DBConnManager.getMySQLConnection()) != null) {
+				//System.out.print("Connect to DB!");
+				//conn = DBConnManager.getMySQLConnection();
+				sql = "Select * from word where word = ?";
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, word);
+				ResultSet rs = stmt.executeQuery();
+				
+				while(rs.next()) {
+					wordItem.setOccurence(rs.getInt("occurence"));
+					wordItem.setCalledTimes(rs.getInt("calledTimes"));
+				}
+				rs.close();
+				stmt.close();
+				stmt = null;
+				
+				conn.close();
+				conn = null;
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -51,8 +76,9 @@ public class JqueryServlet extends HttpServlet {
 			e.printStackTrace();
 		}
         
+        
         response.setContentType("text/plain");
-        response.getWriter().write(String.valueOf(res));
+        response.getWriter().write(wordItem.toString());
 	}
 
 	/**
