@@ -20,7 +20,9 @@ public class DBUtils {
 					wordItem = null;
 				}else {
 					wordItem.setOccurence(rs.getInt("occurence"));
+					//System.out.print(rs.getInt("occurence"));
 					wordItem.setCalledTimes(rs.getInt("calledTimes"));
+					//System.out.print(rs.getInt("calledTimes"));
 				
 				rs.close();
 				stmt.close();
@@ -78,12 +80,9 @@ public class DBUtils {
 				update.setString(1, wordItem.getWord());
 				update.executeUpdate();
 				get.setString(1, wordItem.getWord());
-				get.executeUpdate();
-//				ResultSet rs = get.executeQuery();
-//				wordItem.setOccurence(rs.getInt("occurence"));
-//				wordItem.setCalledTimes(rs.getInt("calledTimes"));
+				get.executeQuery();
+				wordItem.setCalledTimes(wordItem.getCalledTimes()+ 1);
 				conn.commit();
-				
 				
 			}catch (SQLException e) {
 				conn.rollback();

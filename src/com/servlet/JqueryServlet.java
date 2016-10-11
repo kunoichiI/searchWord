@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -14,8 +12,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.DBoperation.DBConnManager;
 import com.DBoperation.DBUtils;
 import com.objectDef.Word;
 
@@ -65,8 +61,6 @@ public class JqueryServlet extends HttpServlet {
         			e.printStackTrace();
         		}
         
-		
-        		System.out.print(wordItem.toString());
         		response.setContentType("text/plain");
         
         		if (tmp != null) {
