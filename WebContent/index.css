@@ -1,6 +1,7 @@
 @CHARSET "UTF-8";
 
 fieldset {
+	margin: 100px 0 10px 0;
 	padding: lem;
 	font: 80 % 1 sans-serif;
 }

@@ -88,7 +88,7 @@ public class JqueryServlet extends HttpServlet {
 	
 	public int searchInFile(String word) throws IOException {
 		int count = 0;
-		String srcDir = "/Users/Stephanie/Documents/workspace/searchWord/txtfiles/";
+		String srcDir = "txtfiles";
 		File folder = new File(srcDir);
 		
 		File[] listOfFiles = folder.listFiles();
