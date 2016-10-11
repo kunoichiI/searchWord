@@ -13,6 +13,10 @@ public class Word {
 		return this.word;
 	}
 	
+	public void setWord(String word) {
+		this.word = word;
+	}
+	
 	public void setOccurence(int i) {
 		this.occurence = i;
 	}
@@ -30,6 +34,6 @@ public class Word {
 	}
 	
 	public String toString() {
-		return"[" + "word:" + this.getWord() + ",  " + "occurence: " + this.getOccurence() + ",  " + "calledTimes: " + this.getCalledTimes() + "]";
+		return "[" + "word:" + this.getWord() + ",  " + "occurence: " + this.getOccurence() + ",  " + "calledTimes: " + this.getCalledTimes() + "]";
 	}
 }

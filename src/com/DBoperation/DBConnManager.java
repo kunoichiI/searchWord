@@ -17,13 +17,24 @@ public class DBConnManager {
 	}
 	
 	public static Connection getMySQLConnection(String hostName, String dbName, String userName, String password) throws SQLException, ClassNotFoundException {
-		// Declare the class Driver for MySQL DB
-		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = null;
+		try {
+			// Declare the class Driver for MySQL DB
+			Class.forName("com.mysql.jdbc.Driver");
 		
-		// URL Connection for MySQL
-		// Example: jdbc:mysql://localhost:3306/searchWord
-		String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
-		Connection conn = DriverManager.getConnection(connectionURL, userName, password);
+			// URL Connection for MySQL
+			// Example: jdbc:mysql://localhost:3306/searchWord
+			String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
+			conn = DriverManager.getConnection(connectionURL, userName, password);
+			if (conn != null) {
+				System.out.println("Connect to MySQL database!");
+			}
+			
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		return conn;
 	}
 
