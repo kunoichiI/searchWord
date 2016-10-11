@@ -41,40 +41,45 @@ public class JqueryServlet extends HttpServlet {
 		String word = request.getParameter("word");
 		int res = 0;
 		int calledTimes = 1;
-        if (word.equals("")) {
+        if (word.equals("")) { // if no word being inputted..
                 word = "Word cannot be empty";
-        } 
+                response.setContentType("text/plain");
+                response.getWriter().write(word);
+        }else {
         
-        // Connect to MySQL database "searchWord"
-        Word wordItem = new Word(word);
-        Connection conn = null;
-        Word tmp = null;
+        		// Connect to MySQL database "searchWord"
+        		Word wordItem = new Word(word);
+        		Connection conn = null;
+        		Word tmp = null;
         
-        // Query database for words which have been searched before, if input word has never been searched, start searching internal resouce text files
-		try {
-			tmp = DBUtils.getWordbyName(conn, wordItem);
-			if (tmp != null) {
-				wordItem.setOccurence(tmp.getOccurence());
-				wordItem.setCalledTimes(tmp.getCalledTimes());
-			}
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
+        		// Query database for words which have been searched before, if input word has never been searched, start searching internal resouce text files
+        		try {
+        			tmp = DBUtils.getWordbyName(conn, wordItem);
+        			if (tmp != null) {
+        				tmp = DBUtils.updateAndGet(conn, wordItem);
+        				System.out.println(tmp.toString());
+        				wordItem.setOccurence(tmp.getOccurence());
+        				wordItem.setCalledTimes(tmp.getCalledTimes());
+        			}
+        		} catch (ClassNotFoundException | SQLException e) {
+        			e.printStackTrace();
+        		}
         
 		
-        System.out.print(wordItem.toString());
-        response.setContentType("text/plain");
+        		System.out.print(wordItem.toString());
+        		response.setContentType("text/plain");
         
-        if (tmp != null) {
+        		if (tmp != null) {
         		
-        		response.getWriter().write(wordItem.toString());
-        }else {
-        		res = searchInFile(word);
+        			response.getWriter().write(wordItem.toString());
+        		}else {
+        			res = searchInFile(word);
         		
-        		System.out.print(res);
-        		DBUtils.insertWordItem(conn, word, res, calledTimes);
-        		response.getWriter().write("[word:" + word + ",  " + " occurence: " + String.valueOf(res) + ",  " + " calledTimes: "+ 1 + "]");
-        }    
+        			System.out.print(res);
+        			DBUtils.insertWordItem(conn, word, res, calledTimes);
+        			response.getWriter().write("[word:" + word + ",  " + " occurence: " + String.valueOf(res) + ",  " + " calledTimes: "+ 1 + "]");
+        		}  
+        }
 	}
 
 	/**

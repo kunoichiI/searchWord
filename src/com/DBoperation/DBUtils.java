@@ -20,9 +20,7 @@ public class DBUtils {
 					wordItem = null;
 				}else {
 					wordItem.setOccurence(rs.getInt("occurence"));
-					//System.out.print(rs.getInt("occurence"));
 					wordItem.setCalledTimes(rs.getInt("calledTimes"));
-					//System.out.print(rs.getInt("calledTimes"));
 				
 				rs.close();
 				stmt.close();
@@ -59,5 +57,46 @@ public class DBUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}																																																																																																																																																																																																																																																																																																																																																																																																																																																															
+	}
+	
+	public static Word updateAndGet(Connection conn, Word wordItem) throws ClassNotFoundException, SQLException {
+		if ((conn = DBConnManager.getMySQLConnection()) != null) {
+			PreparedStatement update = null;
+			PreparedStatement get = null;
+			
+			String sql1 = "Update word set calledTimes = calledTimes + 1 where word = ?";
+			String sql2 = "Select * from word where word = ?";
+			
+			// Using JDBC Transaction(Update calledTimes before getting its row(for word that has been searched before, and being called currently
+			try {
+				conn.setAutoCommit(false);
+				
+				update = conn.prepareStatement(sql1);
+				get = conn.prepareStatement(sql2);
+				
+				// Set parameters
+				update.setString(1, wordItem.getWord());
+				update.executeUpdate();
+				get.setString(1, wordItem.getWord());
+				get.executeUpdate();
+//				ResultSet rs = get.executeQuery();
+//				wordItem.setOccurence(rs.getInt("occurence"));
+//				wordItem.setCalledTimes(rs.getInt("calledTimes"));
+				conn.commit();
+				
+				
+			}catch (SQLException e) {
+				conn.rollback();
+			}finally {
+				if (update != null) {
+					update.close();
+				}
+				if (get != null) {
+					get.close();
+				}
+				conn.setAutoCommit(true);
+			}
+		}
+		return wordItem;
 	}
 }
