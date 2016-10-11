@@ -8,13 +8,7 @@ import java.sql.SQLException;
 import com.objectDef.Word;
 
 public class DBUtils {
-	
-	public DBUtils() throws ClassNotFoundException, SQLException {
-		Connection connection = DBConnManager.getMySQLConnection();
-	}
-	
-	public static Word getWordbyName(Connection conn, Word wordItem) {
-		try {
+	public static Word getWordbyName(Connection conn, Word wordItem) throws SQLException, ClassNotFoundException{
 			if ((conn = DBConnManager.getMySQLConnection()) != null) {
 				//System.out.print("Connect to DB!");
 				String sql = "Select * from word where word = ?";
@@ -38,11 +32,6 @@ public class DBUtils {
 				conn = null;
 				}
 			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		return wordItem;
 	}
 	

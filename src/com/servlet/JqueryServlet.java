@@ -48,24 +48,33 @@ public class JqueryServlet extends HttpServlet {
         // Connect to MySQL database "searchWord"
         Word wordItem = new Word(word);
         Connection conn = null;
-        Word tmp =  DBUtils.getWordbyName(conn, wordItem);
-        System.out.print(tmp.toString());
-		wordItem.setOccurence(tmp.getOccurence());
-		wordItem.setCalledTimes(tmp.getCalledTimes());
+        Word tmp = null;
+        
+        // Query database for words which have been searched before, if input word has never been searched, start searching internal resouce text files
+		try {
+			tmp = DBUtils.getWordbyName(conn, wordItem);
+			if (tmp != null) {
+				wordItem.setOccurence(tmp.getOccurence());
+				wordItem.setCalledTimes(tmp.getCalledTimes());
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+        
 		
         System.out.print(wordItem.toString());
         response.setContentType("text/plain");
-        if (wordItem != null) {
+        
+        if (tmp != null) {
         		
         		response.getWriter().write(wordItem.toString());
-        }
-        		//else {
-//        		res = searchInFile(word);
-//        		
-//        		System.out.print(res);
-//        		DBUtils.insertWordItem(conn, word, res, calledTimes);
-//        		response.getWriter().write(word + String.valueOf(res) + 1);
-//        }    
+        }else {
+        		res = searchInFile(word);
+        		
+        		System.out.print(res);
+        		DBUtils.insertWordItem(conn, word, res, calledTimes);
+        		response.getWriter().write(word + String.valueOf(res) + 1);
+        }    
 	}
 
 	/**
@@ -102,7 +111,7 @@ public class JqueryServlet extends HttpServlet {
 					
 				}
 			}
-			System.out.print("the total is: " + count);
+			//System.out.print("the total is: " + count);
 		}
 		return count;
 	}
