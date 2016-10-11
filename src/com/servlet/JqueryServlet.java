@@ -73,7 +73,7 @@ public class JqueryServlet extends HttpServlet {
         		
         		System.out.print(res);
         		DBUtils.insertWordItem(conn, word, res, calledTimes);
-        		response.getWriter().write(word + String.valueOf(res) + 1);
+        		response.getWriter().write("[word:" + word + ",  " + " occurence: " + String.valueOf(res) + ",  " + " calledTimes: "+ 1 + "]");
         }    
 	}
 
@@ -111,7 +111,6 @@ public class JqueryServlet extends HttpServlet {
 					
 				}
 			}
-			//System.out.print("the total is: " + count);
 		}
 		return count;
 	}
