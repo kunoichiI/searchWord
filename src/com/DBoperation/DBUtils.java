@@ -35,23 +35,49 @@ public class DBUtils {
 		return wordItem;
 	}
 	
+	public static boolean exist(Connection conn, String word) {
+		Boolean exist = false;
+		try {
+			if ((conn = DBConnManager.getMySQLConnection()) != null) {
+				String sql = "Select * from word where word = ?";
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setString(1, word);
+				ResultSet rs = ps.executeQuery();
+				if (rs != null) {
+					exist = true;
+				}else {
+					exist = false;
+				}
+			}
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return exist;
+	}
+	
 	public static void insertWordItem(Connection conn, String word, int occurence, int calledTimes) {
 		try {
 			if ((conn = DBConnManager.getMySQLConnection()) != null) {
-				//System.out.print("Connect to DB!");
-				String sql = "insert into word(word, occurence, calledTimes) values(?,?,?)";
-				PreparedStatement stmt = conn.prepareStatement(sql);
-				// Paprameters start with 1
-				stmt.setString(1, word);
-				stmt.setInt(2, occurence);
-				stmt.setInt(3, calledTimes);
-				stmt.executeUpdate();
+				// Check if word already exists in database or not
+				if (exist(conn, word)) {
+					return;
+				} else {
+					String sql = "insert into word(word, occurence, calledTimes) values(?,?,?)";
+					PreparedStatement stmt = conn.prepareStatement(sql);
+					// Paprameters start with 1
+					stmt.setString(1, word);
+					stmt.setInt(2, occurence);
+					stmt.setInt(3, calledTimes);
+					stmt.executeUpdate();
 			
-				stmt.close();
-				stmt = null;
+					stmt.close();
+					stmt = null;
 			
-				conn.close();
-				conn = null;
+					conn.close();
+					conn = null;
+				}
 			}
 			
 		} catch (ClassNotFoundException e) {

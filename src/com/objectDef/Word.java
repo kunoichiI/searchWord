@@ -33,6 +33,7 @@ public class Word {
 		return this.calledTimes;
 	}
 	
+	@Override
 	public String toString() {
 		return "[" + "word:" + this.getWord() + ",  " + "occurence: " + this.getOccurence() + ",  " + "calledTimes: " + this.getCalledTimes() + "]";
 	}
