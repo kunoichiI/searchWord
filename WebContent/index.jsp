@@ -3,6 +3,7 @@
 <title>AJAX in java web application using jQuery</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="ajax.js"></script>
+<link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
 <form>
