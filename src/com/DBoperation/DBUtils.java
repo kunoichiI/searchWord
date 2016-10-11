@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.objectDef.Word;
 
@@ -35,56 +36,26 @@ public class DBUtils {
 		return wordItem;
 	}
 	
-	public static boolean exist(Connection conn, String word) {
-		Boolean exist = false;
+	
+	public static void insertWordItem(Connection conn, String word, int occurence, int calledTimes) {
 		try {
-			if ((conn = DBConnManager.getMySQLConnection()) != null) {
-				String sql = "Select * from word where word = ?";
-				PreparedStatement ps = conn.prepareStatement(sql);
-				ps.setString(1, word);
-				ResultSet rs = ps.executeQuery();
-				if (rs != null) {
-					exist = true;
-				}else {
-					exist = false;
-				}
-			}
-		}catch(ClassNotFoundException e) {
+		if ((conn = DBConnManager.getMySQLConnection()) != null) {
+			PreparedStatement stmt = null;
+			String sql = "INSERT INTO word(word,occurence,calledTimes) VALUES(?,?,?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, word);
+			stmt.setInt(2, occurence);
+			stmt.setInt(3, calledTimes);
+			stmt.executeUpdate();
+			
+			stmt.close();
+		}
+		}catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return exist;
-	}
-	
-	public static void insertWordItem(Connection conn, String word, int occurence, int calledTimes) {
-		try {
-			if ((conn = DBConnManager.getMySQLConnection()) != null) {
-				// Check if word already exists in database or not
-				if (exist(conn, word)) {
-					return;
-				} else {
-					String sql = "insert into word(word, occurence, calledTimes) values(?,?,?)";
-					PreparedStatement stmt = conn.prepareStatement(sql);
-					// Paprameters start with 1
-					stmt.setString(1, word);
-					stmt.setInt(2, occurence);
-					stmt.setInt(3, calledTimes);
-					stmt.executeUpdate();
-			
-					stmt.close();
-					stmt = null;
-			
-					conn.close();
-					conn = null;
-				}
-			}
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}																																																																																																																																																																																																																																																																																																																																																																																																																																																															
 	}
 	
 	public static Word updateAndGet(Connection conn, Word wordItem) throws ClassNotFoundException, SQLException {

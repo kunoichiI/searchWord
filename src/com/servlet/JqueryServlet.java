@@ -69,8 +69,11 @@ public class JqueryServlet extends HttpServlet {
         		}else {
         			res = searchInFile(word);
         		
+        			res = searchInFile(word);
+            		
         			System.out.print(res);
         			DBUtils.insertWordItem(conn, word, res, calledTimes);
+        			//response.getWriter().write("[word:" + word + ",  " + " occurence: " + String.valueOf(res) + ",  " + " calledTimes: "+ 1 + "]");
         			response.getWriter().write("[word:" + word + ",  " + " occurence: " + String.valueOf(res) + ",  " + " calledTimes: "+ 1 + "]");
         		}  
         }

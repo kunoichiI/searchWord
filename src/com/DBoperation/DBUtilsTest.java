@@ -33,6 +33,7 @@ public class DBUtilsTest extends TestCase {
 		assertEquals("Call lady again", ++lady_call, DBUtils.updateAndGet(myConn, lady).getCalledTimes());
 		assertEquals("Call smith again", ++smith_call, DBUtils.updateAndGet(myConn, smith).getCalledTimes());	
 	}
+	
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		myConn.commit();
